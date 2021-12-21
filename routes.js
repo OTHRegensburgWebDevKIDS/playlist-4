@@ -7,19 +7,22 @@ const dashboard = require("./controllers/dashboard.js");
 const playlist = require("./controllers/playlist.js");
 const accounts = require("./controllers/accounts.js");
 
-router.get("/", home.index);
-router.get("/about", about.index);
-router.get("/dashboard", dashboard.index);
-router.get('/playlist/:id', playlist.index);
-router.get('/playlist/:id/deletesong/:songid', playlist.deleteSong);
-router.get('/dashboard/deleteplaylist/:id', dashboard.deletePlaylist);
-router.post('/playlist/:id/addsong', playlist.addSong);
-router.post('/dashboard/addplaylist', dashboard.addPlaylist);
+const auth = require("./utils/auth.js");
 
-router.get('/login', accounts.login);
-router.get('/signup', accounts.signup);
-router.get('/logout', accounts.logout);
-router.post('/register', accounts.register);
-router.post('/authenticate', accounts.authenticate);
+router.get("/", home.index);
+router.get("/login", accounts.login);
+router.get("/signup", accounts.signup);
+router.get("/logout", accounts.logout);
+router.post("/register", accounts.register);
+router.post("/authenticate", accounts.authenticate);
+router.get("/about", about.index);
+
+//protected routes
+router.get("/dashboard", auth.protected, dashboard.index);
+router.get("/dashboard/deleteplaylist/:id", auth.protected, dashboard.deletePlaylist);
+router.post("/dashboard/addplaylist", auth.protected, dashboard.addPlaylist);
+router.get("/playlist/:id", auth.protected, playlist.index);
+router.get("/playlist/:id/deletesong/:songid", auth.protected, playlist.deleteSong);
+router.post("/playlist/:id/addsong", auth.protected, playlist.addSong);
 
 module.exports = router;
